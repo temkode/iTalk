@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                Int              @id @default(autoincrement())
+  email             String           @unique
+  passwordHash      String
+  firstName         String
+  lastName          String
+  bio               String?
+  joinedAt          DateTime         @default(now())
+  isAdmin           Boolean          @default(false)
+
+  // Relation fields
+  picture           Media?           @relation(fields: [pictureId], references: [id])
+  pictureId         Int?
+  enrollments       Enrollment[]
+  interests         Category[]
+  connRequestsSent  ConnectionRequest[]
+  notifications     Notification[]        @relation("notifications_recieved")
+  notificationsSent Notification[]        @relation("notifications_sent")
+}
+
+model ConnectionRequest {
+  createdAt         DateTime         @default(now())
+  state             RequestState     @default(ACTIVE)
+
+  // Relation Fields
+  userId            Int
+  user              User             @relation(fields: [userId], references: [id])
+  listingId         Int
+  listing           Listing          @relation(fields: [listingId], references: [id])
+  @@id([userId, listingId])
+}
+
+model Notification {
+  id                Int              @id @default(autoincrement())
+  url               String?
+  createdAt         DateTime         @default(now())
+  message           String
+  isUnread          Boolean
+
+  // Relation fields
+  recipient         User             @relation("notifications_recieved", fields: [recipientId], references: [id])
+  recipientId       Int
+  sender            User?            @relation("notifications_sent", fields: [senderId], references: [id])
+  senderId          Int?
+}
+
+model Listing {
+  id                Int              @id @default(autoincrement())
+  name              String
+  description       String
+  rate              Int
+  interval          String  
+
+  // Relation fields
+  members           Enrollment[]
+  connReqs          ConnectionRequest[]
+  video             Media            @relation(fields: [videoId], references: [id])
+  videoId           Int
+  category          Category         @relation(fields: [categoryId], references: [id])
+  categoryId        Int
+}
+
+model Category {
+  id                Int              @id @default(autoincrement())
+  name              String
+
+  // Relation fields
+  listings          Listing[]
+  users             User[]
+}
+
+model Enrollment {
+  createdAt         DateTime         @default(now())
+  role              UserRole         @default(STUDENT)
+
+  // Relation Fields
+  userId            Int
+  listingId         Int
+  user              User             @relation(fields: [userId], references: [id])
+  listing           Listing          @relation(fields: [listingId], references: [id])
+  @@id([userId, listingId])
+  @@index([userId, role])
+}
+
+model Media {
+  id                Int              @id @default(autoincrement())
+  type              MediaType        @default(IMAGE)
+  url               String
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @default(now())
+
+  // Relation Fields
+  user              User?
+  listing           Listing?
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+}
+
+enum RequestState {
+  ACTIVE
+  ACCEPTED
+  REJECTED
+}

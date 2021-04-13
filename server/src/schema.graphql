@@ -1,0 +1,97 @@
+type Query {
+  info: String!
+  # me # return currently logged in user
+  # ListingFeed(): # return listings feed # apollo queries
+  # connectionRequests():
+}
+
+# type Mutation {
+#   # login   # jwt
+#   # signup  # jwt
+#   # logout
+#   # createListing # 
+#   # requestConnection(TeacherID) # get current user from context not arguments, 
+#   # link itself not ocnfirming, link to approval page with student info
+#   # respondConnection   #
+# }
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  bio: String
+  joinedAt: DateTime!
+  isAdmin: Boolean!
+  passwordHash: String!
+
+  picture: Media
+  notifications: [Notification!]!
+  connRequestsSent: [ConnectionRequest!]!
+  interests: [Category!]!
+  listingsEnrolled: [Listing!]!
+  listingsPosted: [Listing!]!
+}
+
+type Media {
+  id: ID!
+  type: MediaType!
+  url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Notification {
+  id: ID!
+  url: String
+  createdAt: DateTime!
+  message: String!
+  isUnread: Boolean!
+
+  recipient: User!
+  sender: User
+}
+
+type ConnectionRequest {
+  id: ID!
+  createdAt: DateTime!
+  state: RequestState!
+
+  from: User!
+  listing: Listing!
+}
+
+type Category {
+  id: ID!
+  name: String!
+
+  listings: [Listing!]!
+  usersInterested: [User!]!
+}
+
+type Listing {
+  id: ID!
+  name: String!
+  description: String!
+  rate: Int!
+  interval: String!
+
+  students: [User!]!
+  teacher: User!
+  connReqs: [ConnectionRequest!]!
+  video: Media
+  category: Category!
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+}
+
+enum RequestState {
+  ACTIVE
+  ACCEPTED
+  REJECTED
+}
+
+scalar DateTime
