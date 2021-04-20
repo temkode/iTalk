@@ -5,15 +5,19 @@ type Query {
   # connectionRequests():
 }
 
-# type Mutation {
-#   # login   # jwt
-#   # signup  # jwt
-#   # logout
+type Mutation {
+  login(email: String!, passwordHash: String!): AuthPayload
+  signup(email: String!, passwordHash: String!, lastName: String!, firstName: String!): AuthPayload
 #   # createListing # 
 #   # requestConnection(TeacherID) # get current user from context not arguments, 
 #   # link itself not ocnfirming, link to approval page with student info
 #   # respondConnection   #
-# }
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
 
 type User {
   id: ID!
