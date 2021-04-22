@@ -63,8 +63,8 @@ model Listing {
   // Relation fields
   members           Enrollment[]
   connReqs          ConnectionRequest[]
-  video             Media            @relation(fields: [videoId], references: [id])
-  videoId           Int
+  video             Media?            @relation(fields: [videoId], references: [id])
+  videoId           Int?
   category          Category         @relation(fields: [categoryId], references: [id])
   categoryId        Int
 }
