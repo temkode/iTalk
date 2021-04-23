@@ -20,7 +20,8 @@ model User {
   // Relation fields
   picture           Media?           @relation(fields: [pictureId], references: [id])
   pictureId         Int?
-  enrollments       Enrollment[]
+  joinedListings    Listing[]        @relation("listings_joined")
+  postedListings    Listing[]        @relation("listings_posted")
   interests         Category[]
   connRequestsSent  ConnectionRequest[]
   notifications     Notification[]        @relation("notifications_recieved")
@@ -59,11 +60,14 @@ model Listing {
   description       String
   rate              Int
   interval          String  
+  @@unique([categoryId, teacherId])
 
   // Relation fields
-  members           Enrollment[]
+  students          User[]           @relation("listings_joined")
   connReqs          ConnectionRequest[]
-  video             Media?            @relation(fields: [videoId], references: [id])
+  teacher           User             @relation("listings_posted", fields: [teacherId], references: [id])
+  teacherId         Int
+  video             Media?           @relation(fields: [videoId], references: [id])
   videoId           Int?
   category          Category         @relation(fields: [categoryId], references: [id])
   categoryId        Int
@@ -78,19 +82,6 @@ model Category {
   users             User[]
 }
 
-model Enrollment {
-  createdAt         DateTime         @default(now())
-  role              UserRole         @default(STUDENT)
-
-  // Relation Fields
-  userId            Int
-  listingId         Int
-  user              User             @relation(fields: [userId], references: [id])
-  listing           Listing          @relation(fields: [listingId], references: [id])
-  @@id([userId, listingId])
-  @@index([userId, role])
-}
-
 model Media {
   id                Int              @id @default(autoincrement())
   type              MediaType        @default(IMAGE)
@@ -101,11 +92,6 @@ model Media {
   // Relation Fields
   user              User?
   listing           Listing?
-}
-
-enum UserRole {
-  STUDENT
-  TEACHER
 }
 
 enum MediaType {

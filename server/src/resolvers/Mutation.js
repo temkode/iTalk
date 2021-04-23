@@ -37,7 +37,36 @@ async function login(parent, args, context, info) {
   };
 }
 
+async function postListing(parent, args, context, info) {
+  const { userId } = context; // Get authenticated user, else exit on error
+
+  // Initially populate Listing data to conditionally add video url later
+  const listingData = {
+    name: args.name,
+    description: args.description,
+    rate: args.rate,
+    interval: args.interval,
+    category: { connect: { id: args.categoryId } },
+    teacher: { connect: { id: userId } },
+  };
+
+  if (args.videoUrl) {
+    // Note: Video must already be uploaded to bucket at this point
+    listingData.video = {
+      create: {
+        type: 'VIDEO',
+        url: args.videoUrl,
+      },
+    };
+  }
+
+  return context.prisma.listing.create({
+    data: listingData,
+  });
+}
+
 export {
   signup,
   login,
+  postListing,
 };

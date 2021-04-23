@@ -7,8 +7,20 @@ type Query {
 
 type Mutation {
   login(email: String!, passwordHash: String!): AuthPayload
-  signup(email: String!, passwordHash: String!, lastName: String!, firstName: String!): AuthPayload
-#   # createListing # 
+  signup(
+    email: String!, 
+    passwordHash: String!, 
+    lastName: String!, 
+    firstName: String!
+  ): AuthPayload
+  postListing(
+    name: String!, 
+    description: String!,
+    rate: Int!,
+    interval: String!,
+    categoryId: Int!,
+    videoUrl: String
+  ): Listing
 #   # requestConnection(TeacherID) # get current user from context not arguments, 
 #   # link itself not ocnfirming, link to approval page with student info
 #   # respondConnection   #
