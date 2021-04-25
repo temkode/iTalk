@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { APP_SECRET, getUserId } from '../util.js';
+import { APP_SECRET, throwNotAuthenticated } from '../util.js';
 
 const { hash, compare } = bcryptjs;
 const { sign } = jwt;
@@ -21,12 +21,12 @@ async function signup(parent, args, context, info) {
 async function login(parent, args, context, info) {
   const user = await context.prisma.user.findUnique({ where: { email: args.email } });
   if (!user) {
-    throw new Error('No such user found');
+    throw new Error('Incorrect email or password.');
   }
 
   const valid = await compare(args.passwordHash, user.passwordHash);
   if (!valid) {
-    throw new Error('Invalid password');
+    throw new Error('Incorrect email or password.');
   }
 
   const token = sign({ userId: user.id }, APP_SECRET);
@@ -38,7 +38,11 @@ async function login(parent, args, context, info) {
 }
 
 async function postListing(parent, args, context, info) {
-  const { userId } = context; // Get authenticated user, else exit on error
+  // For authenticated users only
+  const { userId } = context;
+  if (!userId) {
+    throwNotAuthenticated();
+  }
 
   // Initially populate Listing data to conditionally add video url later
   const listingData = {
@@ -62,6 +66,13 @@ async function postListing(parent, args, context, info) {
 
   return context.prisma.listing.create({
     data: listingData,
+    // include: {
+    // teacher: true,
+    // students: true,
+    // video: true,
+    // category: true,
+    // connReqs: true,
+    // },
   });
 }
 

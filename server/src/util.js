@@ -5,30 +5,22 @@ const { APP_SECRET } = process.env;
 const { verify } = jwt;
 dotenv.config();
 
-function getTokenPayload(token) {
-  return verify(token, APP_SECRET);
+function throwNotAuthenticated() {
+  throw new Error('Not authenticated');
 }
 
-function getUserId(req, authToken) {
-  if (req) {
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
-      const token = authHeader.replace('Bearer ', '');
-      if (!token) {
-        throw new Error('No token found');
-      }
-      const { userId } = getTokenPayload(token);
-      return userId;
-    }
-  } else if (authToken) {
-    const { userId } = getTokenPayload(authToken);
-    return userId;
+function getUserId(req) {
+  const token = req.headers.authorization.replace('Bearer ', '');
+  if (!token) {
+    throw new Error('No token found');
   }
+  const { userId } = verify(token, APP_SECRET);
 
-  throw new Error('Not authenticated');
+  return userId;
 }
 
 export {
   APP_SECRET,
   getUserId,
+  throwNotAuthenticated,
 };
