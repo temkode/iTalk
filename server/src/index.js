@@ -6,6 +6,11 @@ import path from 'path';
 import { getUserId } from './util.js';
 import * as Query from './resolvers/Query.js';
 import * as Mutation from './resolvers/Mutation.js';
+import * as Listing from './resolvers/Listing.js';
+import * as User from './resolvers/User.js';
+import * as Category from './resolvers/Category.js';
+import * as ConnectionRequest from './resolvers/ConnectionRequest.js';
+import * as Notification from './resolvers/Notification.js';
 
 const { PrismaClient } = Prisma;
 const prisma = new PrismaClient({
@@ -15,6 +20,11 @@ const prisma = new PrismaClient({
 const resolvers = {
   Query,
   Mutation,
+  Listing,
+  User,
+  Category,
+  ConnectionRequest,
+  Notification,
 };
 
 const __filename = fileURLToPath(import.meta.url);
