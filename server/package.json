@@ -15,10 +15,10 @@
     "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "prisma": "^2.20.1"
+    "prisma": "^2.21.2"
   },
   "dependencies": {
-    "@prisma/client": "^2.20.1",
+    "@prisma/client": "^2.21.2",
     "apollo-server": "^2.22.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
