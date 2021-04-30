@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["orderByRelation"]
 }
 
 model User {
@@ -60,6 +61,7 @@ model Listing {
   description       String
   rate              Int
   interval          String  
+  createdAt         DateTime         @default(now())
   @@unique([categoryId, teacherId])
 
   // Relation fields
@@ -75,7 +77,8 @@ model Listing {
 
 model Category {
   id                Int              @id @default(autoincrement())
-  name              String
+  name              String           @unique
+  createdAt         DateTime         @default(now())
 
   // Relation fields
   listings          Listing[]

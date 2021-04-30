@@ -1,8 +1,19 @@
 type Query {
   info: String!
+  listingFeed(
+    filter: String,
+    categoryId: Int, 
+    skip: Int, 
+    take: Int,
+    orderBy: ListingOrderByInput
+  ): listingFeed!
   # me # return currently logged in user
-  # ListingFeed(): # return listings feed # apollo queries
   # connectionRequests():
+}
+
+type listingFeed {
+  listings: [Listing!]!,
+  count: Int
 }
 
 type Mutation {
@@ -97,6 +108,17 @@ type Listing {
   connReqs: [ConnectionRequest!]!
   video: Media
   category: Category!
+}
+
+input ListingOrderByInput {
+  rate: Sort
+  createdAt: Sort
+  students: Sort
+}
+
+enum Sort {
+  asc
+  desc
 }
 
 enum MediaType {
