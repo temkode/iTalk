@@ -46,8 +46,12 @@ async function postListing(parent, args, context, info) {
 
   // Initially populate Listing data to conditionally add video url later
   const listingData = {
-    name: args.name,
-    description: args.description,
+    contactInfo: args.contactInfo,
+    teachingBio: args.teachingBio,
+    teachingStyle: args.teachingStyle,
+    teachingMaterial: args.teachingMaterial,
+    trialRate: args.trialRate,
+    isPro: args.isPro,
     rate: args.rate,
     interval: args.interval,
     category: { connect: { id: args.categoryId } },
@@ -66,13 +70,6 @@ async function postListing(parent, args, context, info) {
 
   return context.prisma.listing.create({
     data: listingData,
-    // include: {
-    // teacher: true,
-    // students: true,
-    // video: true,
-    // category: true,
-    // connReqs: true,
-    // },
   });
 }
 

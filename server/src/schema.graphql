@@ -25,11 +25,15 @@ type Mutation {
     firstName: String!
   ): AuthPayload
   postListing(
-    name: String!, 
-    description: String!,
+    contactInfo: String!, 
+    teachingBio: String!,
+    teachingStyle: String,
+    teachingMaterial: String,
+    trialRate: Int,
     rate: Int!,
     interval: String!,
     categoryId: Int!,
+    isPro: Boolean!,
     videoUrl: String
   ): Listing
 #   # requestConnection(TeacherID) # get current user from context not arguments, 
@@ -98,10 +102,15 @@ type Category {
 
 type Listing {
   id: ID!
-  name: String!
-  description: String!
+  contactInfo: String!
+  isPro: Boolean!
+  teachingBio: String!
+  teachingStyle: String
+  teachingMaterial: String
+  trialRate: Int
   rate: Int!
   interval: String!
+  createdAt: DateTime!
 
   students: [User!]!
   teacher: User!

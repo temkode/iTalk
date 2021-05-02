@@ -46,7 +46,7 @@ model Notification {
   url               String?
   createdAt         DateTime         @default(now())
   message           String
-  isUnread          Boolean
+  isUnread          Boolean          @default(true)
 
   // Relation fields
   recipient         User             @relation("notifications_recieved", fields: [recipientId], references: [id])
@@ -57,8 +57,12 @@ model Notification {
 
 model Listing {
   id                Int              @id @default(autoincrement())
-  name              String
-  description       String
+  contactInfo       String
+  isPro             Boolean
+  teachingBio       String
+  teachingStyle     String?
+  teachingMaterial  String?
+  trialRate         Int?
   rate              Int
   interval          String  
   createdAt         DateTime         @default(now())

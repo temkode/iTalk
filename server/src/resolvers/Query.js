@@ -7,8 +7,9 @@ async function listingFeed(parent, args, context) {
 
   if (args.filter) {
     where.OR = [
-      { description: { contains: args.filter } },
-      { name: { contains: args.filter } },
+      { teachingMaterial: { contains: args.filter } },
+      { teachingStyle: { contains: args.filter } },
+      { teachingBio: { contains: args.filter } },
     ];
   }
   if (args.categoryId) {
